@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
             subtitle = getString(R.string.main_product_description),
             clientApplicationKey = BuildConfig.MERCHANT_TOKEN,
             shopId = BuildConfig.SHOP_ID,
-            savePaymentMethod = SavePaymentMethod.OFF,
+            savePaymentMethod = SavePaymentMethod.USER_SELECTS,
             paymentMethodTypes = paymentMethodTypes,
             gatewayId = BuildConfig.GATEWAY_ID,
             customReturnUrl = getString(R.string.test_redirect_url),
@@ -91,10 +91,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun showToken(data: Intent?) {
         if (data != null) {
-            val token = createTokenizationResult(data).paymentToken
+            val result = createTokenizationResult(data)
             Toast.makeText(
                 this,
-                String.format(Locale.getDefault(), getString(R.string.tokenization_success), token),
+                String.format(Locale.getDefault(), getString(R.string.tokenization_success), result.paymentToken, result.savePaymentMethod.toString()),
                 Toast.LENGTH_LONG
             ).show()
         } else {

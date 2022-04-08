@@ -21,20 +21,10 @@
 
 package ru.yoomoney.sdk.kassa.payments.tokenize
 
-import ru.yoomoney.sdk.kassa.payments.model.AbstractWallet
-import ru.yoomoney.sdk.kassa.payments.model.NoConfirmation
-import ru.yoomoney.sdk.kassa.payments.model.PaymentOption
-import ru.yoomoney.sdk.kassa.payments.model.Result
-import ru.yoomoney.sdk.kassa.payments.model.SelectedOptionNotFoundException
-import ru.yoomoney.sdk.kassa.payments.model.WalletInfo
-import ru.yoomoney.sdk.kassa.payments.model.YooMoney
+import ru.yoomoney.sdk.kassa.payments.model.*
 import ru.yoomoney.sdk.kassa.payments.payment.CheckPaymentAuthRequiredGateway
 import ru.yoomoney.sdk.kassa.payments.payment.GetLoadedPaymentOptionListRepository
-import ru.yoomoney.sdk.kassa.payments.payment.tokenize.TokenizeInputModel
-import ru.yoomoney.sdk.kassa.payments.payment.tokenize.TokenizeInstrumentInputModel
-import ru.yoomoney.sdk.kassa.payments.payment.tokenize.TokenizeOutputModel
-import ru.yoomoney.sdk.kassa.payments.payment.tokenize.TokenizePaymentOptionInputModel
-import ru.yoomoney.sdk.kassa.payments.payment.tokenize.TokenizeRepository
+import ru.yoomoney.sdk.kassa.payments.payment.tokenize.*
 import ru.yoomoney.sdk.kassa.payments.paymentAuth.PaymentAuthTokenRepository
 
 private const val CANNOT_TOKENIZE_ABSTRACT_WALLET = "can not tokenize abstract wallet"
@@ -79,13 +69,18 @@ internal class TokenizeUseCaseImpl(
                 }
 
                 when (result) {
-                    is Result.Success -> Tokenize.Action.TokenizeSuccess(
-                        TokenizeOutputModel(
-                            token = result.value,
-                            option = option,
-                            instrumentBankCard = model.instrumentBankCard
+                    is Result.Success -> {
+                        val savePaymentMethod =
+                            if (model is TokenizePaymentOptionInputModel) model.savePaymentMethod else false
+                        Tokenize.Action.TokenizeSuccess(
+                            TokenizeOutputModel(
+                                token = result.value,
+                                option = option,
+                                instrumentBankCard = model.instrumentBankCard,
+                                savePaymentMethod = savePaymentMethod && option.savePaymentMethodAllowed
+                            )
                         )
-                    )
+                    }
                     is Result.Fail -> Tokenize.Action.TokenizeFailed(result.value)
                 }.also {
                     model.allowWalletLinking.takeUnless { it }?.let {

@@ -31,5 +31,6 @@ import ru.yoomoney.sdk.kassa.payments.checkoutParameters.PaymentMethodType
 @Keep
 data class TokenizationResult(
     @Keep val paymentToken: String,
-    @Keep val paymentMethodType: PaymentMethodType
+    @Keep val paymentMethodType: PaymentMethodType,
+    @Keep val savePaymentMethod: Boolean? = false
 )

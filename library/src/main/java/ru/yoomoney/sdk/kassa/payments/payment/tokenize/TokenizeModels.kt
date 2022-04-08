@@ -58,5 +58,6 @@ internal data class TokenizeInstrumentInputModel(
 internal data class TokenizeOutputModel(
     val token: String,
     val option: PaymentOption,
-    val instrumentBankCard: PaymentInstrumentBankCard?
+    val instrumentBankCard: PaymentInstrumentBankCard?,
+    val savePaymentMethod: Boolean?
 )

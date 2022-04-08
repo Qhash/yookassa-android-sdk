@@ -25,14 +25,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.annotation.Keep
-import ru.yoomoney.sdk.kassa.payments.ui.CheckoutActivity
-import ru.yoomoney.sdk.kassa.payments.ui.EXTRA_CREATED_WITH_CHECKOUT_METHOD
-import ru.yoomoney.sdk.kassa.payments.ui.EXTRA_CSC_PARAMETERS
-import ru.yoomoney.sdk.kassa.payments.ui.EXTRA_PAYMENT_METHOD_TYPE
-import ru.yoomoney.sdk.kassa.payments.ui.EXTRA_PAYMENT_PARAMETERS
-import ru.yoomoney.sdk.kassa.payments.ui.EXTRA_PAYMENT_TOKEN
-import ru.yoomoney.sdk.kassa.payments.ui.EXTRA_TEST_PARAMETERS
-import ru.yoomoney.sdk.kassa.payments.ui.EXTRA_UI_PARAMETERS
 import ru.yoomoney.sdk.kassa.payments.ui.color.InMemoryColorSchemeRepository
 import ru.yoomoney.sdk.kassa.payments.utils.checkUrl
 import ru.yoomoney.sdk.kassa.payments.checkoutParameters.PaymentMethodType
@@ -40,8 +32,18 @@ import ru.yoomoney.sdk.kassa.payments.checkoutParameters.PaymentParameters
 import ru.yoomoney.sdk.kassa.payments.checkoutParameters.SavedBankCardPaymentParameters
 import ru.yoomoney.sdk.kassa.payments.checkoutParameters.TestParameters
 import ru.yoomoney.sdk.kassa.payments.checkoutParameters.UiParameters
+import ru.yoomoney.sdk.kassa.payments.ui.*
+import ru.yoomoney.sdk.kassa.payments.ui.CheckoutActivity
 import ru.yoomoney.sdk.kassa.payments.ui.ConfirmationActivity
 import ru.yoomoney.sdk.kassa.payments.ui.EXTRA_CONFIRMATION_URL
+import ru.yoomoney.sdk.kassa.payments.ui.EXTRA_CREATED_WITH_CHECKOUT_METHOD
+import ru.yoomoney.sdk.kassa.payments.ui.EXTRA_CSC_PARAMETERS
+import ru.yoomoney.sdk.kassa.payments.ui.EXTRA_PAYMENT_METHOD_TYPE
+import ru.yoomoney.sdk.kassa.payments.ui.EXTRA_PAYMENT_PARAMETERS
+import ru.yoomoney.sdk.kassa.payments.ui.EXTRA_PAYMENT_TOKEN
+import ru.yoomoney.sdk.kassa.payments.ui.EXTRA_SAVE_PAYMENT_METHOD
+import ru.yoomoney.sdk.kassa.payments.ui.EXTRA_TEST_PARAMETERS
+import ru.yoomoney.sdk.kassa.payments.ui.EXTRA_UI_PARAMETERS
 import ru.yoomoney.sdk.kassa.payments.ui.color.ColorScheme
 import ru.yoomoney.sdk.kassa.payments.ui.view.EXTRA_CARD_NUMBER
 import ru.yoomoney.sdk.kassa.payments.ui.view.EXTRA_EXPIRY_MONTH
@@ -101,7 +103,8 @@ object Checkout {
     fun createTokenizationResult(data: Intent): TokenizationResult {
         val token = requireNotNull(data.getStringExtra(EXTRA_PAYMENT_TOKEN))
         val type = data.getSerializableExtra(EXTRA_PAYMENT_METHOD_TYPE) as PaymentMethodType
-        return TokenizationResult(token, type)
+        val savePaymentMethod = data.getBooleanExtra(EXTRA_SAVE_PAYMENT_METHOD, false)
+        return TokenizationResult(token, type, savePaymentMethod)
     }
 
     /**

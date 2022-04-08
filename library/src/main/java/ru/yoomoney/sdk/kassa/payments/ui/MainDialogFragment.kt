@@ -26,6 +26,7 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,6 +64,9 @@ import ru.yoomoney.sdk.kassa.payments.ui.view.BackPressedBottomSheetDialog
 import ru.yoomoney.sdk.kassa.payments.ui.view.WithBackPressedListener
 import ru.yoomoney.sdk.kassa.payments.unbind.UnbindCardFragment
 import javax.inject.Inject
+
+internal const val EXTRA_SAVE_PAYMENT_METHOD = "ru.yoomoney.sdk.kassa.payments.extra.SAVE_PAYMENT_METHOD"
+
 
 private const val PAYMENT_OPTION_LIST_FRAGMENT_TAG = "paymentOptionListFragment"
 private const val CONTRACT_FRAGMENT_TAG = "contractFragment"
@@ -219,9 +223,11 @@ internal class MainDialogFragment : BottomSheetDialogFragment() {
                 TOKENIZE_FRAGMENT_TAG
             )
             is Screen.TokenizeSuccessful -> {
+                Log.d("Qhash", "Save=" + screen.tokenOutputModel.savePaymentMethod)
                 val result = Intent()
                     .putExtra(EXTRA_PAYMENT_TOKEN, screen.tokenOutputModel.token)
                     .putExtra(EXTRA_PAYMENT_METHOD_TYPE, screen.tokenOutputModel.option.toType())
+                    .putExtra(EXTRA_SAVE_PAYMENT_METHOD, screen.tokenOutputModel.savePaymentMethod)
 
                 with(requireActivity()) {
                     setResult(Activity.RESULT_OK, result)
